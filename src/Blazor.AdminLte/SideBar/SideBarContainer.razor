@@ -1,9 +1,46 @@
 ﻿@namespace Blazor.AdminLte
+@using Blazor.AdminLte.Enumerations;
 <!-- Main Sidebar Container -->
-<aside class="main-sidebar sidebar-dark-primary elevation-4">
-    @ChildContent
+<aside class="main-sidebar @colorClass elevation-4">
+	@ChildContent
 </aside>
 @code {
-    [Parameter]
-    public RenderFragment ChildContent { get; set; }
+	[Parameter]
+	public RenderFragment ChildContent { get; set; }
+
+	[Parameter]
+	public SideBarColor Color { get; set; } = SideBarColor.Primary;
+
+	[Parameter]
+	public bool DarkMode { get; set; } = true;
+
+	public string colorClass = "sidebar-dark-primary";
+
+	protected override void OnInitialized()
+	{
+		colorClass = Color switch
+		{
+			SideBarColor.White => "sidebar-dark-white",
+			SideBarColor.Primary => "sidebar-dark-primary",
+			SideBarColor.Secondary => "sidebar-dark-secondary",
+			SideBarColor.Success => "sidebar-dark-success",
+			SideBarColor.Danger => "sidebar-dark-danger",
+			SideBarColor.Indigo => "sidebar-dark-indigo",
+			SideBarColor.Purple => "sidebar-dark-purple",
+			SideBarColor.Pink => "sidebar-dark-pink",
+			SideBarColor.Navy => "sidebar-dark-navy",
+			SideBarColor.Lightblue => "sidebar-dark-lightblue",
+			SideBarColor.Teal => "sidebar-dark-teal",
+			SideBarColor.Cyan => "sidebar-dark-cyan",
+			SideBarColor.GrayDark => "sidebar-dark-graydark",
+			SideBarColor.Gray => "sidebar-dark-gray",
+			SideBarColor.Warning => "sidebar-dark-warning",
+			SideBarColor.Orange => "sidebar-dark-orange",
+			_ => "sidebar-dark-primary"
+		};
+		if (!DarkMode)
+		{
+			colorClass = colorClass.Replace("-dark-", "-light-");
+		}
+	}
 }

@@ -1,7 +1,7 @@
 ﻿<!-- Navbar -->
 @namespace Blazor.AdminLte
 @using Blazor.AdminLte.Enumerations;
-<nav class="main-header navbar navbar-expand @navbarclass @navbarluminosity" @onclick="Update">
+<nav class="main-header navbar navbar-expand @navbarclass @navbarluminosity" @onclick="Update" id="navbar-top">
 	@ChildContent
 </nav>
 <!-- /.navbar -->
@@ -14,6 +14,9 @@
 
 	[Parameter]
 	public NavBarColor NavColor { get; set; } = NavBarColor.White;
+
+	public EventCallback<ChangeEventArgs> DarkModeChanged { get; set; }
+	public EventCallback<ChangeEventArgs> NavColorChanged { get; set; }
 
 	private string navbarclass = "navbar-white";
 
@@ -42,11 +45,86 @@
 			_ => "navbar-white"
 		};
 
-		navbarluminosity = DarkMode ? "navbar-dark" : "navbar-light";
+		//navbarluminosity = DarkMode ? "navbar-light" : "navbar-dark";
+
+		navbarluminosity = NavColor switch
+		{
+			NavBarColor.Primary or
+			NavBarColor.Purple or
+			NavBarColor.Secondary or
+			NavBarColor.Info or
+			NavBarColor.Success or
+			NavBarColor.Danger or
+			NavBarColor.Indigo or
+			NavBarColor.Pink or
+			NavBarColor.Navy or
+			NavBarColor.Lightblue or
+			NavBarColor.Teal or
+			NavBarColor.Cyan or
+			NavBarColor.GrayDark or
+			NavBarColor.Gray => "navbar-dark",
+			NavBarColor.Warning or
+			NavBarColor.White or
+			NavBarColor.Orange => "navbar-light",
+			_ => "navbar-light"
+		};
 	}
 
 	private void Update()
 	{
+		StateHasChanged();
+	}
+
+	public async Task OnDarkModeChanged(ChangeEventArgs eventArgs)
+	{
+		await DarkModeChanged.InvokeAsync(eventArgs);
+		navbarluminosity = DarkMode ? "navbar-dark" : "navbar-light";
+		StateHasChanged();
+	}
+
+	public async Task OnNavBarColorChanged(ChangeEventArgs eventArgs)
+	{
+		navbarclass = NavColor switch
+		{
+			NavBarColor.White => "navbar-white",
+			NavBarColor.Primary => "navbar-primary",
+			NavBarColor.Secondary => "navbar-secondary",
+			NavBarColor.Success => "navbar-success",
+			NavBarColor.Danger => "navbar-danger",
+			NavBarColor.Indigo => "navbar-indigo",
+			NavBarColor.Purple => "navbar-purple",
+			NavBarColor.Pink => "navbar-pink",
+			NavBarColor.Navy => "navbar-navy",
+			NavBarColor.Lightblue => "navbar-lightblue",
+			NavBarColor.Teal => "navbar-teal",
+			NavBarColor.Cyan => "navbar-cyan",
+			NavBarColor.GrayDark => "navbar-graydark",
+			NavBarColor.Gray => "navbar-gray",
+			NavBarColor.Warning => "navbar-warning",
+			NavBarColor.Orange => "navbar-orange",
+			_ => "navbar-white"
+		};
+		navbarluminosity = NavColor switch
+		{
+			NavBarColor.Purple or
+			NavBarColor.Secondary or
+			NavBarColor.Info or
+			NavBarColor.Success or
+			NavBarColor.Danger or
+			NavBarColor.Indigo or
+			NavBarColor.Pink or
+			NavBarColor.Navy or
+			NavBarColor.Lightblue or
+			NavBarColor.Teal or
+			NavBarColor.Cyan or
+			NavBarColor.GrayDark or
+			NavBarColor.Gray => "navbar-dark",
+			NavBarColor.Warning or
+			NavBarColor.White or
+			NavBarColor.Orange => "navbar-light",
+			_ => "navbar-light"
+		};
+		await NavColorChanged.InvokeAsync(eventArgs);
 		StateHasChanged();
 	}
 }
